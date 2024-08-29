@@ -1,4 +1,8 @@
+python -m pip install Django
 pip install virtualenv
 pip install djangorestframework
 pip install crossdomain
 py -m venv venv
+pip install django-cors-headers djangorestframework
+python manage.py makemigrations
+python manage.py migrate
