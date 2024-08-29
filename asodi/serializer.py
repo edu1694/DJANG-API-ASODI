@@ -5,18 +5,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = '__all__'  # Incluye todos los campos del modelo en la representación del serializador
-        extra_kwargs = {
-            'password': {'write_only': True}  # La contraseña solo debe ser escrita
-        }
-
-    def create(self, validated_data):
-        password = validated_data.pop('password', None)  # Extrae la contraseña
-        usuario = Usuario.objects.create(**validated_data)  # Crea el usuario
-        if password:
-            usuario.set_password(password)  # Encripta la contraseña
-        usuario.save()  # Guarda el usuario
-        return usuario
-
+       
 class FichaPersonalSerializer(serializers.ModelSerializer):
     class Meta:
         model = FichaPersonal
