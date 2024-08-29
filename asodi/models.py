@@ -19,7 +19,7 @@ class Usuario(models.Model):
     apellido = models.CharField(max_length=100, blank=False)
     fecha_nacimiento = models.DateField(blank=False)
     correo = models.EmailField(blank=False)
-    password = models.CharField(max_length=20, blank=False)
+    password = models.CharField(max_length=200, blank=False)
 
     def __str__(self):
         return f"{self.rut}"
