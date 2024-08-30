@@ -14,11 +14,11 @@ def validate_positive(value):
         raise ValidationError('Este campo no puede ser negativo.')
 
 class Usuario(models.Model):
-    rut = models.CharField(max_length=12, primary_key=True, validators=[validate_rut])
+    rut = models.CharField(max_length=12, primary_key=True, validators=[validate_rut], unique=True)
     nombre = models.CharField(max_length=100, blank=False)
     apellido = models.CharField(max_length=100, blank=False)
     fecha_nacimiento = models.DateField(blank=False)
-    correo = models.EmailField(blank=False)
+    correo = models.EmailField(max_length=100,blank=False, unique=True)
     password = models.CharField(max_length=200, blank=False)
 
     def __str__(self):
@@ -120,7 +120,6 @@ class Medicacion(models.Model):
     cantidad = models.IntegerField(blank=False, validators=[validate_positive])
     tipo_medicamento = models.CharField(max_length=15, blank=False)
     frecuencia_hora = models.IntegerField(blank=False, validators=[validate_positive])
-
     def __str__(self):
         return f"Medicamento: {self.nombre_medicamento}"
 
@@ -147,7 +146,7 @@ class Anuncios(models.Model):
 
 class UsuarioAsodi(models.Model):
     id_usuario = models.AutoField(primary_key=True)
-    correo_electronico = models.EmailField(max_length=35, blank=False)
+    correo_electronico = models.EmailField(max_length=100, blank=False, unique=True)
     contraseña = models.CharField(max_length=25, blank=False)
 
     def __str__(self):
