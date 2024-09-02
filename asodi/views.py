@@ -1,19 +1,20 @@
 from django.shortcuts import render
-
-# Create your views here.
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
-from .models import  Usuario, FichaPersonal, RegistroCitasMedicas, RegistroSintoma, RegistroPresion, RegistroPeso, Medicacion, RegistroMediTomado, Anuncios, UsuarioAsodi
-from .serializer import  UsuarioSerializer, FichaPersonalSerializer, RegistroCitasMedicasSerializer, RegistroSintomaSerializer, RegistroPresionSerializer, RegistroPesoSerializer, MedicacionSerializer, RegistroMediTomadoSerializer, AnunciosSerializer, UsuarioAsodiSerializer
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
 from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from .models import Usuario, FichaPersonal, RegistroCitasMedicas, RegistroSintoma, RegistroPresion, RegistroPeso, Medicacion, RegistroMediTomado, Anuncios, UsuarioAsodi
-from .serializer import UsuarioSerializer, FichaPersonalSerializer, RegistroCitasMedicasSerializer, RegistroSintomaSerializer, RegistroPresionSerializer, RegistroPesoSerializer, MedicacionSerializer, RegistroMediTomadoSerializer, AnunciosSerializer, UsuarioAsodiSerializer
+from django.shortcuts import get_object_or_404
+from .models import (
+    Usuario, FichaPersonal, RegistroCitasMedicas, RegistroSintoma,
+    RegistroPresion, RegistroPeso, Medicacion, RegistroMediTomado,
+    Anuncios, UsuarioAsodi
+)
+from .serializer import (
+    UsuarioSerializer, FichaPersonalSerializer, RegistroCitasMedicasSerializer,
+    RegistroSintomaSerializer, RegistroPresionSerializer, RegistroPesoSerializer,
+    MedicacionSerializer, RegistroMediTomadoSerializer, AnunciosSerializer,
+    UsuarioAsodiSerializer
+)
 
 @api_view(['GET', 'POST'])
 def listado_usuario(request):
@@ -32,11 +33,7 @@ def listado_usuario(request):
 
 @api_view(['GET', 'PUT'])
 def vista_usuario(request, rut):
-    try:
-        usuario = Usuario.objects.get(rut=rut)
-    except Usuario.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
+    usuario = get_object_or_404(Usuario, rut=rut)
     if request.method == 'GET':
         serializer = UsuarioSerializer(usuario)
         return Response(serializer.data)
@@ -65,12 +62,10 @@ def listado_ficha_personal(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT'])
-def vista_ficha_personal(request, id_ficha):
-    try:
-        ficha = FichaPersonal.objects.get(id_ficha=id_ficha)
-    except FichaPersonal.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
+def vista_ficha_personal(request, rut):
+    usuario = get_object_or_404(Usuario, rut=rut)
+    ficha = get_object_or_404(FichaPersonal, usuario=usuario)
+    
     if request.method == 'GET':
         serializer = FichaPersonalSerializer(ficha)
         return Response(serializer.data)
@@ -82,6 +77,7 @@ def vista_ficha_personal(request, id_ficha):
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 @api_view(['GET', 'POST'])
 def listado_registro_citas_medicas(request):
     if request.method == 'GET':
@@ -98,18 +94,16 @@ def listado_registro_citas_medicas(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT'])
-def vista_registro_citas_medicas(request, id_cita_medica):
-    try:
-        cita = RegistroCitasMedicas.objects.get(id_cita_medica=id_cita_medica)
-    except RegistroCitasMedicas.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
+def vista_registro_citas_medicas(request, rut):
+    usuario = get_object_or_404(Usuario, rut=rut)
+    citas = RegistroCitasMedicas.objects.filter(usuario=usuario)
+    
     if request.method == 'GET':
-        serializer = RegistroCitasMedicasSerializer(cita)
+        serializer = RegistroCitasMedicasSerializer(citas, many=True)
         return Response(serializer.data)
     elif request.method == 'PUT':
         data = request.data
-        serializer = RegistroCitasMedicasSerializer(cita, data=data)
+        serializer = RegistroCitasMedicasSerializer(citas.first(), data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -132,18 +126,16 @@ def listado_registro_sintoma(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT'])
-def vista_registro_sintoma(request, id_registro):
-    try:
-        sintoma = RegistroSintoma.objects.get(id_registro=id_registro)
-    except RegistroSintoma.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
+def vista_registro_sintoma(request, rut):
+    usuario = get_object_or_404(Usuario, rut=rut)
+    sintomas = RegistroSintoma.objects.filter(usuario=usuario)
+    
     if request.method == 'GET':
-        serializer = RegistroSintomaSerializer(sintoma)
+        serializer = RegistroSintomaSerializer(sintomas, many=True)
         return Response(serializer.data)
     elif request.method == 'PUT':
         data = request.data
-        serializer = RegistroSintomaSerializer(sintoma, data=data)
+        serializer = RegistroSintomaSerializer(sintomas.first(), data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -166,18 +158,16 @@ def listado_registro_presion(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT'])
-def vista_registro_presion(request, id_presion):
-    try:
-        presion = RegistroPresion.objects.get(id_presion=id_presion)
-    except RegistroPresion.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
+def vista_registro_presion(request, rut):
+    usuario = get_object_or_404(Usuario, rut=rut)
+    presiones = RegistroPresion.objects.filter(usuario=usuario)
+    
     if request.method == 'GET':
-        serializer = RegistroPresionSerializer(presion)
+        serializer = RegistroPresionSerializer(presiones, many=True)
         return Response(serializer.data)
     elif request.method == 'PUT':
         data = request.data
-        serializer = RegistroPresionSerializer(presion, data=data)
+        serializer = RegistroPresionSerializer(presiones.first(), data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -200,18 +190,16 @@ def listado_registro_peso(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT'])
-def vista_registro_peso(request, id_peso):
-    try:
-        peso = RegistroPeso.objects.get(id_peso=id_peso)
-    except RegistroPeso.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
+def vista_registro_peso(request, rut):
+    usuario = get_object_or_404(Usuario, rut=rut)
+    pesos = RegistroPeso.objects.filter(usuario=usuario)
+    
     if request.method == 'GET':
-        serializer = RegistroPesoSerializer(peso)
+        serializer = RegistroPesoSerializer(pesos, many=True)
         return Response(serializer.data)
     elif request.method == 'PUT':
         data = request.data
-        serializer = RegistroPesoSerializer(peso, data=data)
+        serializer = RegistroPesoSerializer(pesos.first(), data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -233,24 +221,24 @@ def listado_medicacion(request):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT'])
-def vista_medicacion(request, id_medicacion):
-    try:
-        medicacion = Medicacion.objects.get(id_medicacion=id_medicacion)
-    except Medicacion.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+@api_view(['GET', 'PUT', 'DELETE'])
+def vista_medicacion(request, rut):
+    usuario = get_object_or_404(Usuario, rut=rut)
+    medicaciones = Medicacion.objects.filter(usuario=usuario)
+    
     if request.method == 'GET':
-        serializer = MedicacionSerializer(medicacion)
+        serializer = MedicacionSerializer(medicaciones, many=True)
         return Response(serializer.data)
     elif request.method == 'PUT':
         data = request.data
-        serializer = MedicacionSerializer(medicacion, data=data)
+        serializer = MedicacionSerializer(medicaciones.first(), data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
+        medicacion = medicaciones.first()
         medicacion.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -270,18 +258,16 @@ def listado_registro_medi_tomado(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT'])
-def vista_registro_medi_tomado(request, id_registro_medi):
-    try:
-        registro = RegistroMediTomado.objects.get(id_registro_medi=id_registro_medi)
-    except RegistroMediTomado.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
+def vista_registro_medi_tomado(request, rut):
+    usuario = get_object_or_404(Usuario, rut=rut)
+    registros = RegistroMediTomado.objects.filter(medicacion__usuario=usuario)
+    
     if request.method == 'GET':
-        serializer = RegistroMediTomadoSerializer(registro)
+        serializer = RegistroMediTomadoSerializer(registros, many=True)
         return Response(serializer.data)
     elif request.method == 'PUT':
         data = request.data
-        serializer = RegistroMediTomadoSerializer(registro, data=data)
+        serializer = RegistroMediTomadoSerializer(registros.first(), data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -305,11 +291,7 @@ def listado_anuncios(request):
 
 @api_view(['GET', 'PUT'])
 def vista_anuncios(request, id_anuncio):
-    try:
-        anuncio = Anuncios.objects.get(id_anuncio=id_anuncio)
-    except Anuncios.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
+    anuncio = get_object_or_404(Anuncios, id_anuncio=id_anuncio)
     if request.method == 'GET':
         serializer = AnunciosSerializer(anuncio)
         return Response(serializer.data)
@@ -339,11 +321,7 @@ def listado_usuario_asodi(request):
 
 @api_view(['GET', 'PUT'])
 def vista_usuario_asodi(request, id_usuario):
-    try:
-        usuario_asodi = UsuarioAsodi.objects.get(id_usuario=id_usuario)
-    except UsuarioAsodi.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
+    usuario_asodi = get_object_or_404(UsuarioAsodi, id_usuario=id_usuario)
     if request.method == 'GET':
         serializer = UsuarioAsodiSerializer(usuario_asodi)
         return Response(serializer.data)
@@ -355,4 +333,3 @@ def vista_usuario_asodi(request, id_usuario):
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
