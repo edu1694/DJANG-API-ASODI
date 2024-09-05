@@ -13,6 +13,7 @@ urlpatterns = [
     # URLs para RegistroCitasMedicas
     path('v1/citas/', views.listado_registro_citas_medicas, name='listado_registro_citas_medicas'),
     path('v1/citas/<rut>/', views.vista_registro_citas_medicas, name='vista_registro_citas_medicas'),
+    path('v1/citas/<rut>/<int:id>/', views.vista_registro_citas_medicas, name='detalle_registro_citas_medicas'),
 
     # URLs para RegistroSintoma
     path('v1/sintomas/', views.listado_registro_sintoma, name='listado_registro_sintoma'),
@@ -21,10 +22,12 @@ urlpatterns = [
     # URLs para RegistroPresion
     path('v1/presiones/', views.listado_registro_presion, name='listado_registro_presion'),
     path('v1/presiones/<rut>/', views.vista_registro_presion, name='vista_registro_presion'),
+    path('v1/presiones/<rut>/<int:id>/', views.vista_registro_presion, name='detalle_registro_presion'),
 
     # URLs para RegistroPeso
     path('v1/pesos/', views.listado_registro_peso, name='listado_registro_peso'),
     path('v1/pesos/<rut>/', views.vista_registro_peso, name='vista_registro_peso'),
+    path('v1/pesos/<rut>/<int:id>/', views.vista_registro_peso, name='detalle_registro_peso'),
 
     # URLs para Medicacion
     path('v1/medicaciones/', views.listado_medicacion, name='listado_medicacion'),
