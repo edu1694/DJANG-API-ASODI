@@ -93,22 +93,30 @@ def listado_registro_citas_medicas(request):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT'])
-def vista_registro_citas_medicas(request, rut):
+@api_view(['GET', 'PUT', 'DELETE'])
+def vista_registro_citas_medicas(request, rut, id=None):
     usuario = get_object_or_404(Usuario, rut=rut)
     citas = RegistroCitasMedicas.objects.filter(usuario=usuario)
-    
+
     if request.method == 'GET':
         serializer = RegistroCitasMedicasSerializer(citas, many=True)
         return Response(serializer.data)
+
     elif request.method == 'PUT':
-        data = request.data
-        serializer = RegistroCitasMedicasSerializer(citas.first(), data=data)
+        cita = get_object_or_404(RegistroCitasMedicas, id_cita_medica=id, usuario=usuario)
+        serializer = RegistroCitasMedicasSerializer(cita, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        cita = get_object_or_404(RegistroCitasMedicas, id_cita_medica=id, usuario=usuario)
+        cita.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 
 @api_view(['GET', 'POST'])
 def listado_registro_sintoma(request):
@@ -157,22 +165,28 @@ def listado_registro_presion(request):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT'])
-def vista_registro_presion(request, rut):
+@api_view(['GET', 'PUT', 'DELETE'])
+def vista_registro_presion(request, rut, id=None):
     usuario = get_object_or_404(Usuario, rut=rut)
     presiones = RegistroPresion.objects.filter(usuario=usuario)
-    
+
     if request.method == 'GET':
         serializer = RegistroPresionSerializer(presiones, many=True)
         return Response(serializer.data)
+
     elif request.method == 'PUT':
-        data = request.data
-        serializer = RegistroPresionSerializer(presiones.first(), data=data)
+        presion = get_object_or_404(RegistroPresion, id_presion=id, usuario=usuario)
+        serializer = RegistroPresionSerializer(presion, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        presion = get_object_or_404(RegistroPresion, id_presion=id, usuario=usuario)
+        presion.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 @api_view(['GET', 'POST'])
 def listado_registro_peso(request):
@@ -189,22 +203,28 @@ def listado_registro_peso(request):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT'])
-def vista_registro_peso(request, rut):
+@api_view(['GET', 'PUT', 'DELETE'])
+def vista_registro_peso(request, rut, id=None):
     usuario = get_object_or_404(Usuario, rut=rut)
     pesos = RegistroPeso.objects.filter(usuario=usuario)
-    
+
     if request.method == 'GET':
         serializer = RegistroPesoSerializer(pesos, many=True)
         return Response(serializer.data)
+
     elif request.method == 'PUT':
-        data = request.data
-        serializer = RegistroPesoSerializer(pesos.first(), data=data)
+        peso = get_object_or_404(RegistroPeso, id_peso=id, usuario=usuario)
+        serializer = RegistroPesoSerializer(peso, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        peso = get_object_or_404(RegistroPeso, id_peso=id, usuario=usuario)
+        peso.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 @api_view(['GET', 'POST'])
 def listado_medicacion(request):

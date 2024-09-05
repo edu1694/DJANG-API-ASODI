@@ -97,8 +97,9 @@ class RegistroSintoma(models.Model):
 class RegistroPresion(models.Model):
     id_presion = models.AutoField(primary_key=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, to_field='rut')
-    presion_diastolica = models.FloatField(blank=False, validators=[validate_positive])
-    presion_sistolica = models.FloatField(blank=False, validators=[validate_positive])
+    presion_diastolica = models.IntegerField(blank=False, validators=[validate_positive])
+    presion_sistolica = models.IntegerField(blank=False, validators=[validate_positive])
+    frecuenciacardiaca = models.IntegerField(blank=False, validators=[validate_positive])
     fecha_registro = models.DateField(blank=False)
 
     def __str__(self):
@@ -107,7 +108,7 @@ class RegistroPresion(models.Model):
 class RegistroPeso(models.Model):
     id_peso = models.AutoField(primary_key=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, to_field='rut')
-    peso = models.FloatField(blank=False, validators=[validate_positive])
+    peso = models.IntegerField(blank=False, validators=[validate_positive])
     fecha_registro = models.DateField(blank=False)
 
     def __str__(self):
