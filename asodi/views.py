@@ -52,31 +52,30 @@ def listado_ficha_personal(request):
         fichas = FichaPersonal.objects.all()
         serializer = FichaPersonalSerializer(fichas, many=True)
         return Response(serializer.data)
+    
     elif request.method == 'POST':
         data = request.data
         serializer = FichaPersonalSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET', 'PUT'])
 def vista_ficha_personal(request, rut):
-    usuario = get_object_or_404(Usuario, rut=rut)
-    ficha = get_object_or_404(FichaPersonal, usuario=usuario)
-    
+    ficha = get_object_or_404(FichaPersonal, usuario__rut=rut)  # Usamos el rut como clave primaria
     if request.method == 'GET':
         serializer = FichaPersonalSerializer(ficha)
         return Response(serializer.data)
+
     elif request.method == 'PUT':
-        data = request.data
-        serializer = FichaPersonalSerializer(ficha, data=data)
+        serializer = FichaPersonalSerializer(ficha, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET', 'POST'])
 def listado_registro_citas_medicas(request):

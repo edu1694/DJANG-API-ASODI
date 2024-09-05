@@ -30,8 +30,7 @@ class FichaPersonal(models.Model):
         ('F', 'Mujer'),
     ]
 
-    id_ficha = models.AutoField(primary_key=True)
-    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, to_field='rut')
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, to_field='rut', primary_key=True)
     edad = models.IntegerField(blank=False, validators=[validate_positive])
     estatura = models.FloatField(blank=False, validators=[validate_positive])
     sexo = models.CharField(max_length=1, choices=GENERO_CHOICES, blank=False)
