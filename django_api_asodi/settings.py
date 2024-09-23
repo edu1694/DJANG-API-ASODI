@@ -30,6 +30,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 ALLOWED_HOSTS = ['djang-api-asodi-production.up.railway.app']
 
+CSRF_TRUSTED_ORIGIN = ['http://*', 'https://djang-api-asodi-production.up.railway.app']
 
 # Application definition
 
