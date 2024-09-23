@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,6 +26,8 @@ SECRET_KEY = 'django-insecure-&4+e5rh5kxx=r0eo^sj4qapj38$hw8eubmb^lk*x-6%vp98!ne
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 ALLOWED_HOSTS = ['djang-api-asodi-production.up.railway.app']
 
 
@@ -37,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'whitenoise.runserver_nostactic',
     "corsheaders",
     'rest_framework',
     'asodi',
@@ -44,6 +48,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
@@ -131,3 +136,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8081",  # Cambia esto según el puerto que uses
 ]
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

@@ -1,1 +1,1 @@
-web: gunicorn django_api_asodi.wsgi
+web: python manage.py collectstatic && gunicorn django_api_asodi.wsgi
