@@ -6,13 +6,13 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import (
     Usuario, FichaPersonal, RegistroCitasMedicas, RegistroSintoma,
-    RegistroPresion, RegistroPeso, Medicacion, RegistroMediTomado,
+    RegistroPresion, RegistroPeso, Medicamento, RegistroMediTomado,
     Anuncios, UsuarioAsodi
 )
 from .serializer import (
     UsuarioSerializer, FichaPersonalSerializer, RegistroCitasMedicasSerializer,
     RegistroSintomaSerializer, RegistroPresionSerializer, RegistroPesoSerializer,
-    MedicacionSerializer, RegistroMediTomadoSerializer, AnunciosSerializer,
+    MedicamentoSerializer, RegistroMediTomadoSerializer, AnunciosSerializer,
     UsuarioAsodiSerializer
 )
 
@@ -225,41 +225,12 @@ def vista_registro_peso(request, rut, id=None):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def listado_medicacion(request):
     if request.method == 'GET':
-        medicaciones = Medicacion.objects.all()
-        serializer = MedicacionSerializer(medicaciones, many=True)
+        medicaciones = Medicamento.objects.all()  # Cambiado a Medicamento
+        serializer = MedicamentoSerializer(medicaciones, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
-        data = request.data
-        serializer = MedicacionSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def vista_medicacion(request, rut):
-    usuario = get_object_or_404(Usuario, rut=rut)
-    medicaciones = Medicacion.objects.filter(usuario=usuario)
-    
-    if request.method == 'GET':
-        serializer = MedicacionSerializer(medicaciones, many=True)
-        return Response(serializer.data)
-    elif request.method == 'PUT':
-        data = request.data
-        serializer = MedicacionSerializer(medicaciones.first(), data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
-        medicacion = medicaciones.first()
-        medicacion.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
 def listado_registro_medi_tomado(request):
@@ -276,22 +247,25 @@ def listado_registro_medi_tomado(request):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT'])
-def vista_registro_medi_tomado(request, rut):
+@api_view(['GET', 'PUT', 'DELETE'])
+def vista_registro_medi_tomado(request, rut, id=None):
     usuario = get_object_or_404(Usuario, rut=rut)
-    registros = RegistroMediTomado.objects.filter(medicacion__usuario=usuario)
-    
+    medicamentos = RegistroMediTomado.objects.filter(usuario=usuario)
     if request.method == 'GET':
-        serializer = RegistroMediTomadoSerializer(registros, many=True)
+        serializer = RegistroMediTomadoSerializer(medicamentos, many=True)
         return Response(serializer.data)
     elif request.method == 'PUT':
-        data = request.data
-        serializer = RegistroMediTomadoSerializer(registros.first(), data=data)
+        medicamentos = get_object_or_404(RegistroMediTomadoSerializer, id_res_medicamento=id, usuario=usuario)
+        serializer = RegistroMediTomadoSerializer(medicamentos, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        medicamentos = get_object_or_404(RegistroMediTomado, id_res_medicamento=id, usuario=usuario)
+        medicamentos.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
 def listado_anuncios(request):
