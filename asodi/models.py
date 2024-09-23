@@ -113,22 +113,41 @@ class RegistroPeso(models.Model):
     def __str__(self):
         return f"Peso del {self.fecha_registro}"
 
-class Medicacion(models.Model):
-    id_medicacion = models.AutoField(primary_key=True)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, to_field='rut')
-    nombre_medicamento = models.CharField(max_length=20, blank=False)
-    cantidad = models.IntegerField(blank=False, validators=[validate_positive])
-    tipo_medicamento = models.CharField(max_length=15, blank=False)
-    frecuencia_hora = models.IntegerField(blank=False, validators=[validate_positive])
+class Medicamento(models.Model):
+    id_medicamento = models.AutoField(primary_key=True)
+    nombre_generico = models.CharField(max_length=100, help_text="Nombre genérico del medicamento")
+    nombre_comercial = models.CharField(max_length=100, help_text="Nombre comercial del medicamento")
+    composicion = models.TextField(help_text="Composición detallada del medicamento")
+    forma_farmaceutica = models.CharField(max_length=50, choices=[
+        ('tableta', 'Tableta'),
+        ('capsula', 'Cápsula'),
+        ('jarabe', 'Jarabe'),
+        ('inyeccion', 'Inyección'),
+        ('crema', 'Crema'),
+        # Agrega más opciones según sea necesario
+    ], help_text="Forma farmacéutica del medicamento")
+    indicaciones = models.TextField(help_text="Indicaciones para el uso del medicamento")
+    dosis = models.CharField(max_length=100, help_text="Dosis recomendada")
+    contraindicaciones = models.TextField(blank=True, help_text="Contraindicaciones del medicamento")
+    advertencias = models.TextField(blank=True, help_text="Advertencias y precauciones")
+    interacciones = models.TextField(blank=True, help_text="Interacciones con otros medicamentos o alimentos")
+    efectos_secundarios = models.TextField(blank=True, help_text="Efectos secundarios posibles")
+    sobredosis = models.TextField(blank=True, help_text="Tratamiento y síntomas de sobredosis")
+    condiciones_almacenamiento = models.CharField(max_length=100, help_text="Condiciones de almacenamiento")
+    
     def __str__(self):
-        return f"Medicamento: {self.nombre_medicamento}"
+        return f"{self.nombre_comercial} ({self.nombre_generico})"
+
+    class Meta:
+        verbose_name = "Medicamento"
+        verbose_name_plural = "Medicamentos"
 
 class RegistroMediTomado(models.Model):
-    id_registro_medi = models.AutoField(primary_key=True)
-    medicacion = models.ForeignKey(Medicacion, on_delete=models.CASCADE)
+    id_res_medicamento = models.AutoField(primary_key=True)
+    medicacion = models.ForeignKey(Medicamento, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, to_field='rut')
     fecha_toma = models.DateField(blank=False)
-    confirmacion_toma = models.BooleanField(blank=False)  # True or False
-
+    confirmacion_toma = models.BooleanField(blank=False)
     def __str__(self):
         return f"Registro de medicación del {self.fecha_toma}"
 
