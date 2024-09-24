@@ -6,14 +6,13 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import (
     Usuario, FichaPersonal, RegistroCitasMedicas, RegistroSintoma,
-    RegistroPresion, RegistroPeso, Medicamento, RegistroMediTomado,
+    RegistroPresion, RegistroPeso,
     Anuncios, UsuarioAsodi
 )
 from .serializer import (
     UsuarioSerializer, FichaPersonalSerializer, RegistroCitasMedicasSerializer,
     RegistroSintomaSerializer, RegistroPresionSerializer, RegistroPesoSerializer,
-    MedicamentoSerializer, RegistroMediTomadoSerializer, AnunciosSerializer,
-    UsuarioAsodiSerializer
+    AnunciosSerializer,UsuarioAsodiSerializer
 )
 
 @api_view(['GET', 'POST'])
@@ -222,49 +221,6 @@ def vista_registro_peso(request, rut, id=None):
     elif request.method == 'DELETE':
         peso = get_object_or_404(RegistroPeso, id_peso=id, usuario=usuario)
         peso.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-@api_view(['GET'])
-def listado_medicacion(request):
-    if request.method == 'GET':
-        medicaciones = Medicamento.objects.all()  # Cambiado a Medicamento
-        serializer = MedicamentoSerializer(medicaciones, many=True)
-        return Response(serializer.data)
-
-@api_view(['GET', 'POST'])
-def listado_registro_medi_tomado(request):
-    if request.method == 'GET':
-        registros = RegistroMediTomado.objects.all()
-        serializer = RegistroMediTomadoSerializer(registros, many=True)
-        return Response(serializer.data)
-    elif request.method == 'POST':
-        data = request.data
-        serializer = RegistroMediTomadoSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def vista_registro_medi_tomado(request, rut, id=None):
-    usuario = get_object_or_404(Usuario, rut=rut)
-    medicamentos = RegistroMediTomado.objects.filter(usuario=usuario)
-    if request.method == 'GET':
-        serializer = RegistroMediTomadoSerializer(medicamentos, many=True)
-        return Response(serializer.data)
-    elif request.method == 'PUT':
-        medicamentos = get_object_or_404(RegistroMediTomadoSerializer, id_res_medicamento=id, usuario=usuario)
-        serializer = RegistroMediTomadoSerializer(medicamentos, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
-        medicamentos = get_object_or_404(RegistroMediTomado, id_res_medicamento=id, usuario=usuario)
-        medicamentos.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])

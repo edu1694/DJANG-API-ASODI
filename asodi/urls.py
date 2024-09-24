@@ -29,14 +29,6 @@ urlpatterns = [
     path('v1/pesos/<rut>/', views.vista_registro_peso, name='vista_registro_peso'),
     path('v1/pesos/<rut>/<int:id>/', views.vista_registro_peso, name='detalle_registro_peso'),
 
-    # URLs para Medicacion
-    path('v1/medicaciones/', views.listado_medicacion, name='listado_medicacion'),
-
-    # URLs para RegistroMediTomado
-    path('v1/medicamentos-tomados/', views.listado_registro_medi_tomado, name='listado_registro_medi_tomado'),
-    path('v1/medicamentos-tomados/<rut>/', views.vista_registro_medi_tomado, name='vista_registro_medi_tomado'),
-    path('v1/medicamentos-tomados/<rut>/<int:id>/', views.vista_registro_medi_tomado, name='detalle_registro_medi_tomado'),
-
     # URLs para Anuncios
     path('v1/anuncios/', views.listado_anuncios, name='listado_anuncios'),
     path('v1/anuncios/<int:id_anuncio>/', views.vista_anuncios, name='vista_anuncios'),

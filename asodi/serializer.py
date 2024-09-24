@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Usuario, FichaPersonal, RegistroCitasMedicas, RegistroSintoma, RegistroPresion, RegistroPeso, Medicamento, RegistroMediTomado, Anuncios, UsuarioAsodi
+from .models import Usuario, FichaPersonal, RegistroCitasMedicas, RegistroSintoma, RegistroPresion, RegistroPeso, Anuncios, UsuarioAsodi
 
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,16 +29,6 @@ class RegistroPresionSerializer(serializers.ModelSerializer):
 class RegistroPesoSerializer(serializers.ModelSerializer):
     class Meta:
         model = RegistroPeso
-        fields = '__all__'
-
-class MedicamentoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Medicamento
-        fields = '__all__'
-
-class RegistroMediTomadoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RegistroMediTomado
         fields = '__all__'
 
 class AnunciosSerializer(serializers.ModelSerializer):
