@@ -32,7 +32,7 @@ DEBUG = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-ALLOWED_HOSTS = ['djang-api-asodi-production.up.railway.app']
+ALLOWED_HOSTS = ['djang-api-asodi-production.up.railway.app',]
 
 CSRF_TRUSTED_ORIGINS = ['http://*', 'https://djang-api-asodi-production.up.railway.app']
 
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "corsheaders",
     'rest_framework',
+    'coreapi',
     'asodi',
 ]
 
@@ -140,3 +141,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
+}
