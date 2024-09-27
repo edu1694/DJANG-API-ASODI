@@ -5,6 +5,9 @@ class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = '__all__'  # Incluye todos los campos del modelo en la representación del serializador
+        extra_kwargs = {
+            'password': {'write_only': True}  # La contraseña solo debe ser escrita
+        }
        
 class FichaPersonalSerializer(serializers.ModelSerializer):
     class Meta:
