@@ -125,7 +125,7 @@ class UsuarioAsodiAdmin(models.Model):
 
 # Modelo para UsuarioAsodiAd
 class UsuarioAsodiAd(models.Model):
-    rut_ad = models.CharField(max_length=9, primary_key=True, validators=[validate_rut], unique=True)
+    rut_ad  = models.CharField(max_length=12, primary_key=True, validators=[validate_rut], unique=True)
     nombre = models.CharField(max_length=50, blank=False)
     apellido = models.CharField(max_length=50, blank=False)
     correo = models.EmailField(max_length=100, blank=False, unique=True)
