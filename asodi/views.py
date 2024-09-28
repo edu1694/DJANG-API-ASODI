@@ -259,7 +259,14 @@ def listado_usuario_asodi_admin(request):
         usuarios_asodi_admin = UsuarioAsodiAdmin.objects.all()
         serializer = UsuarioAsodiAdminSerializer(usuarios_asodi_admin, many=True)
         return Response(serializer.data)
-
+    elif request.method == 'POST':
+        data = request.data
+        serializer = UsuarioAsodiAdminSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def vista_usuario_asodi_admin(request, correo):
@@ -268,19 +275,6 @@ def vista_usuario_asodi_admin(request, correo):
         serializer = UsuarioAsodiAdminSerializer(usuario_asodi_admin)
         return Response(serializer.data)
     
-@api_view(['POST'])
-def login_usuario_asodi_admin(request):
-    correo = request.data.get('correo')
-    password = request.data.get('password')
-    try:
-        usuario = UsuarioAsodiAdmin.objects.get(correo=correo)
-        if usuario.check_password(password):  # Usamos el método check_password del usuario
-            serializer = UsuarioAsodiAdminSerializer(usuario)
-            return Response({'message': 'Login exitoso', 'usuario': serializer.data}, status=status.HTTP_200_OK)
-        else:
-            return Response({'message': 'Credenciales inválidas'}, status=status.HTTP_400_BAD_REQUEST)
-    except UsuarioAsodiAdmin.DoesNotExist:
-        return Response({'message': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET', 'POST'])
@@ -314,20 +308,6 @@ def vista_usuario_asodi_ad(request, rut):
     elif request.method == 'DELETE':
         usuario_asodi_ad.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-@api_view(['POST'])
-def login_usuario_asodi_ad(request):
-    correo = request.data.get('correo')
-    password = request.data.get('password')
-    try:
-        usuario = UsuarioAsodiAd.objects.get(correo=correo)
-        if usuario.check_password(password):  # Usamos el método check_password del modelo
-            serializer = UsuarioAsodiAdSerializer(usuario)
-            return Response({'message': 'Login exitoso', 'usuario': serializer.data}, status=status.HTTP_200_OK)
-        else:
-            return Response({'message': 'Credenciales inválidas'}, status=status.HTTP_400_BAD_REQUEST)
-    except UsuarioAsodiAd.DoesNotExist:
-        return Response({'message': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET', 'POST'])
 def listado_convenios(request):
