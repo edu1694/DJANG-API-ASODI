@@ -18,9 +18,6 @@ class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = '__all__'
-        extra_kwargs = {
-            'password': {'write_only': True}  # La contraseña solo debe ser escrita
-        }
 
 # Serializer para FichaPersonal
 class FichaPersonalSerializer(serializers.ModelSerializer):
@@ -63,18 +60,12 @@ class UsuarioAsodiAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsuarioAsodiAdmin
         fields = '__all__'
-        extra_kwargs = {
-            'password': {'write_only': True}  # La contraseña solo debe ser escrita
-        }
 
 # Serializer para UsuarioAsodiAd
 class UsuarioAsodiAdSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsuarioAsodiAd
         fields = '__all__'
-        extra_kwargs = {
-            'password': {'write_only': True}  # La contraseña solo debe ser escrita
-        }
 
 # Serializer para Convenios
 class ConveniosSerializer(serializers.ModelSerializer):
