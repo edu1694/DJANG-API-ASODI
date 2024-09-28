@@ -48,6 +48,10 @@ urlpatterns = [
     # URLs para PlanillasConvenio
     path('v1/planillas-convenio/', views.listado_planillas_convenio, name='listado_planillas_convenio'),
     path('v1/planillas-convenio/<int:id_planilla>/', views.vista_planillas_convenio, name='vista_planillas_convenio'),
+
+    # URLs para Solicitudes
+    path('v1/solicitudes/', views.listado_solicitudes, name='listado_solicitudes'),
+    path('v1/solicitudes/<int:id_soli>/', views.vista_solicitud, name='vista_solicitud'),
 ]
 
 

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import (
+    Solicitudes,
     Usuario, 
     FichaPersonal, 
     RegistroCitasMedicas, 
@@ -77,4 +78,9 @@ class ConveniosSerializer(serializers.ModelSerializer):
 class PlanillasConvenioSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlanillasConvenio
+        fields = '__all__'
+
+class SolicitudesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Solicitudes
         fields = '__all__'

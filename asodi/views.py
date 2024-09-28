@@ -5,12 +5,12 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import (
-    Convenios, PlanillasConvenio, Usuario, FichaPersonal, RegistroCitasMedicas, RegistroSintoma,
+    Convenios, PlanillasConvenio, Solicitudes, Usuario, FichaPersonal, RegistroCitasMedicas, RegistroSintoma,
     RegistroPresion, RegistroPeso,
     Anuncios,  UsuarioAsodiAd, UsuarioAsodiAdmin
 )
 from .serializer import (
-    ConveniosSerializer, PlanillasConvenioSerializer, UsuarioAsodiAdSerializer, UsuarioAsodiAdminSerializer, UsuarioSerializer, FichaPersonalSerializer, RegistroCitasMedicasSerializer,
+    ConveniosSerializer, PlanillasConvenioSerializer, SolicitudesSerializer, UsuarioAsodiAdSerializer, UsuarioAsodiAdminSerializer, UsuarioSerializer, FichaPersonalSerializer, RegistroCitasMedicasSerializer,
     RegistroSintomaSerializer, RegistroPresionSerializer, RegistroPesoSerializer,
     AnunciosSerializer
 )
@@ -371,4 +371,39 @@ def vista_planillas_convenio(request, id_planilla):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         planilla.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET', 'POST'])
+def listado_solicitudes(request):
+    if request.method == 'GET':
+        solicitudes = Solicitudes.objects.all()
+        serializer = SolicitudesSerializer(solicitudes, many=True)
+        return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        data = request.data
+        serializer = SolicitudesSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def vista_solicitud(request, id_soli):
+    solicitud = get_object_or_404(Solicitudes, id_soli=id_soli)
+    
+    if request.method == 'GET':
+        serializer = SolicitudesSerializer(solicitud)
+        return Response(serializer.data)
+    
+    elif request.method == 'PUT':
+        serializer = SolicitudesSerializer(solicitud, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'DELETE':
+        solicitud.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
