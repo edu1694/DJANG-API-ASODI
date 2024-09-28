@@ -198,3 +198,24 @@ class Anuncios(models.Model):
 
     def __str__(self):
         return self.titulo
+    
+class Solicitudes(models.Model):
+    ESTADO_CHOICES = [
+        ('P', 'Pendiente'),
+        ('A', 'Aprobada'),
+        ('R', 'Rechazada'),
+    ]
+
+    id_soli = models.AutoField(primary_key=True)
+    motivo = models.TextField(blank=False)
+    estado = models.CharField(
+        max_length=1,
+        choices=ESTADO_CHOICES,
+        default='P'  # Pendiente por defecto
+    )
+    fecha_creacion = models.DateField(auto_now_add=True)
+    planilla_convenio = models.ForeignKey(PlanillasConvenio, on_delete=models.CASCADE)  # Relación con la planilla de convenios
+    usuario_solicitante = models.ForeignKey(UsuarioAsodiAd, on_delete=models.CASCADE)  # Usuario solicitante (UsuarioAsodiAd)
+    
+    def str(self):
+        return f"Solicitud {self.id_soli} - {self.estado}"
