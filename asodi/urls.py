@@ -33,7 +33,19 @@ urlpatterns = [
     path('v1/anuncios/', views.listado_anuncios, name='listado_anuncios'),
     path('v1/anuncios/<int:id_anuncio>/', views.vista_anuncios, name='vista_anuncios'),
 
-    # URLs para UsuarioAsodi
-    path('v1/usuarios-asodi/', views.listado_usuario_asodi, name='listado_usuario_asodi'),
-    path('v1/usuarios-asodi/<int:id_usuario>/', views.vista_usuario_asodi, name='vista_usuario_asodi'),
+    # URLs para UsuarioAsodiAdmin (búsqueda por correo)
+    path('v1/usuarios-asodi-admin/', views.listado_usuario_asodi_admin, name='listado_usuario_asodi_admin'),
+    path('v1/usuarios-asodi-admin/<str:correo>/', views.vista_usuario_asodi_admin, name='vista_usuario_asodi_admin'),
+
+    # URLs para UsuarioAsodiAd (búsqueda por RUT)
+    path('v1/usuarios-asodi-ad/', views.listado_usuario_asodi_ad, name='listado_usuario_asodi_ad'),
+    path('v1/usuarios-asodi-ad/<str:rut>/', views.vista_usuario_asodi_ad, name='vista_usuario_asodi_ad'),
+
+    # URLs para Convenios
+    path('v1/convenios/', views.listado_convenios, name='listado_convenios'),
+    path('v1/convenios/<int:id_convenio>/', views.vista_convenios, name='vista_convenios'),
+
+    # URLs para PlanillasConvenio
+    path('v1/planillas-convenio/', views.listado_planillas_convenio, name='listado_planillas_convenio'),
+    path('v1/planillas-convenio/<int:id_planilla>/', views.vista_planillas_convenio, name='vista_planillas_convenio'),
 ]
