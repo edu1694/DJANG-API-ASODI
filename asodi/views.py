@@ -293,8 +293,8 @@ def listado_usuario_asodi_ad(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def vista_usuario_asodi_ad(request, rut):
-    usuario_asodi_ad = get_object_or_404(UsuarioAsodiAd, rut=rut)
+def vista_usuario_asodi_ad(request, rut_ad):
+    usuario_asodi_ad = get_object_or_404(UsuarioAsodiAd, rut_ad=rut_ad)
     if request.method == 'GET':
         serializer = UsuarioAsodiAdSerializer(usuario_asodi_ad)
         return Response(serializer.data)

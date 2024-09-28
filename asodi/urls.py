@@ -39,7 +39,7 @@ urlpatterns = [
 
     # URLs para UsuarioAsodiAd (búsqueda por RUT)
     path('v1/usuarios-asodi-ad/', views.listado_usuario_asodi_ad, name='listado_usuario_asodi_ad'),
-    path('v1/usuarios-asodi-ad/<str:rut>/', views.vista_usuario_asodi_ad, name='vista_usuario_asodi_ad'),
+    path('v1/usuarios-asodi-ad/<rut_ad>/', views.vista_usuario_asodi_ad, name='vista_usuario_asodi_ad'),
 
     # URLs para Convenios
     path('v1/convenios/', views.listado_convenios, name='listado_convenios'),
