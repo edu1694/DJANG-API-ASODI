@@ -158,7 +158,7 @@ class PlanillasConvenio(models.Model):
 
     id = models.AutoField(primary_key=True)
     fecha_recepcion = models.DateField(blank=False)
-    rut = models.CharField(max_length=9, validators=[validate_rut], blank=False)
+    rut = models.CharField(max_length=12, validators=[validate_rut], unique=True)
     nombre_paciente = models.CharField(max_length=50, blank=False)
     apellido_paciente = models.CharField(max_length=50, blank=False)
     fecha_sic = models.DateField(blank=True, null=True)  # Campo opcional
