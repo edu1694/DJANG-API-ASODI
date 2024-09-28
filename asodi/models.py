@@ -114,22 +114,87 @@ class RegistroPeso(models.Model):
     def __str__(self):
         return f"Peso del {self.fecha_registro}"
     
+# Modelo para UsuarioAsodiAdmin
+class UsuarioAsodiAdmin(models.Model):
+    correo = models.EmailField(max_length=50, unique=True, blank=False, primary_key=True)
+    password = models.CharField(max_length=50, blank=False)
+    nombre = models.CharField(max_length=50, blank=False)
+
+    def __str__(self):
+        return self.correo
+
+# Modelo para UsuarioAsodiAd
+class UsuarioAsodiAd(models.Model):
+    rut_ad = models.CharField(max_length=9, primary_key=True, validators=[validate_rut], unique=True)
+    nombre = models.CharField(max_length=50, blank=False)
+    apellido = models.CharField(max_length=50, blank=False)
+    correo = models.EmailField(max_length=100, blank=False, unique=True)
+    password = models.CharField(max_length=50, blank=False)
+    estado_ad = models.BooleanField(default=True)  # Asumo que es un campo booleano de estado activo/inactivo
+
+    def __str__(self):
+        return f"{self.nombre} {self.apellido}"
+
+# Modelo para Convenios
+class Convenios(models.Model):
+    nombre_convenio = models.CharField(max_length=50, primary_key=True)
+    horas_llamado = models.IntegerField(validators=[validate_positive])
+    dias_para_operar = models.IntegerField(validators=[validate_positive])
+    dias_para_alertar = models.IntegerField(validators=[validate_positive])
+    usuario_asodi_admin = models.ForeignKey(UsuarioAsodiAdmin, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.nombre_convenio
+
+# Modelo para PlanillasConvenio
+from django.db import models
+
+class PlanillasConvenio(models.Model):
+    ESTADO_PACIENTE_CHOICES = [
+        ('P', 'Pendiente'),
+        ('E', 'En proceso'),
+        ('A', 'Alta'),
+    ]
+
+    id = models.AutoField(primary_key=True)
+    fecha_recepcion = models.DateField(blank=False)
+    rut = models.CharField(max_length=9, validators=[validate_rut], blank=False)
+    nombre_paciente = models.CharField(max_length=50, blank=False)
+    apellido_paciente = models.CharField(max_length=50, blank=False)
+    fecha_sic = models.DateField(blank=True, null=True)  # Campo opcional
+    reg_primer_llamado = models.DateField(blank=False)
+    reg_segundo_llamado = models.DateField(blank=True, null=True)
+    reg_tercer_llamado = models.DateField(blank=True, null=True)
+    observacion = models.TextField(blank=True, null=True)
+    doctor = models.CharField(max_length=50, blank=True, null=True)
+    fecha_evaluacion = models.DateField(blank=True, null=True)
+    fecha_cirugia = models.DateField(blank=True, null=True)
+    control_post_operatorio = models.DateField(blank=True, null=True)
+    control_mes = models.DateField(blank=True, null=True)
+    
+    estado_paciente = models.CharField(
+        max_length=1,
+        choices=ESTADO_PACIENTE_CHOICES,
+        default='P',  # Valor predeterminado, si lo deseas
+        blank=False
+    )
+    
+    convenios = models.ForeignKey(Convenios, on_delete=models.CASCADE)
+    usuario_asodi_ad = models.ForeignKey(UsuarioAsodiAd, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Planilla del paciente {self.nombre_paciente} {self.apellido_paciente}"
+
+
+# Modelo para Anuncios
 class Anuncios(models.Model):
     id_anuncio = models.AutoField(primary_key=True)
-    usuario_asodi = models.ForeignKey('UsuarioAsodi', on_delete=models.CASCADE)
-    fecha = models.DateField(blank=False)
-    hora = models.TimeField(blank=False)
-    titulo = models.CharField(max_length=15, blank=False)
+    usuario_asodi_admin = models.ForeignKey(UsuarioAsodiAdmin, on_delete=models.CASCADE)
+    titulo = models.CharField(max_length=50, blank=False)
     descripcion = models.TextField(blank=False)
-    #imagen = models.ImageField(upload_to='anuncios/')
+    fecha_inicio = models.DateField(blank=False)
+    fecha_termino = models.DateField(blank=False)
+    estado_an = models.BooleanField(default=True)  # Campo para indicar si el anuncio está activo o inactivo
 
     def __str__(self):
         return self.titulo
-
-class UsuarioAsodi(models.Model):
-    id_usuario = models.AutoField(primary_key=True)
-    correo_electronico = models.EmailField(max_length=100, blank=False, unique=True)
-    contraseña = models.CharField(max_length=25, blank=False)
-
-    def __str__(self):
-        return self.correo_electronico

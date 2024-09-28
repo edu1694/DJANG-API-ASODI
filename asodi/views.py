@@ -5,14 +5,14 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import (
-    Usuario, FichaPersonal, RegistroCitasMedicas, RegistroSintoma,
+    Convenios, PlanillasConvenio, Usuario, FichaPersonal, RegistroCitasMedicas, RegistroSintoma,
     RegistroPresion, RegistroPeso,
-    Anuncios, UsuarioAsodi
+    Anuncios,  UsuarioAsodiAd, UsuarioAsodiAdmin
 )
 from .serializer import (
-    UsuarioSerializer, FichaPersonalSerializer, RegistroCitasMedicasSerializer,
+    ConveniosSerializer, PlanillasConvenioSerializer, UsuarioAsodiAdSerializer, UsuarioAsodiAdminSerializer, UsuarioSerializer, FichaPersonalSerializer, RegistroCitasMedicasSerializer,
     RegistroSintomaSerializer, RegistroPresionSerializer, RegistroPesoSerializer,
-    AnunciosSerializer,UsuarioAsodiSerializer
+    AnunciosSerializer
 )
 
 @api_view(['GET', 'POST'])
@@ -253,32 +253,114 @@ def vista_anuncios(request, id_anuncio):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'POST'])
-def listado_usuario_asodi(request):
+@api_view(['GET'])
+def listado_usuario_asodi_admin(request):
     if request.method == 'GET':
-        usuarios_asodi = UsuarioAsodi.objects.all()
-        serializer = UsuarioAsodiSerializer(usuarios_asodi, many=True)
+        usuarios_asodi_admin = UsuarioAsodiAdmin.objects.all()
+        serializer = UsuarioAsodiAdminSerializer(usuarios_asodi_admin, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+def vista_usuario_asodi_admin(request, correo):
+    usuario_asodi_admin = get_object_or_404(UsuarioAsodiAdmin, correo=correo)
+    if request.method == 'GET':
+        serializer = UsuarioAsodiAdminSerializer(usuario_asodi_admin)
+        return Response(serializer.data)
+
+@api_view(['GET', 'POST'])
+def listado_usuario_asodi_ad(request):
+    if request.method == 'GET':
+        usuarios_asodi_ad = UsuarioAsodiAd.objects.all()
+        serializer = UsuarioAsodiAdSerializer(usuarios_asodi_ad, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
         data = request.data
-        serializer = UsuarioAsodiSerializer(data=data)
+        serializer = UsuarioAsodiAdSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT'])
-def vista_usuario_asodi(request, id_usuario):
-    usuario_asodi = get_object_or_404(UsuarioAsodi, id_usuario=id_usuario)
+@api_view(['GET', 'PUT', 'DELETE'])
+def vista_usuario_asodi_ad(request, rut):
+    usuario_asodi_ad = get_object_or_404(UsuarioAsodiAd, rut=rut)
     if request.method == 'GET':
-        serializer = UsuarioAsodiSerializer(usuario_asodi)
+        serializer = UsuarioAsodiAdSerializer(usuario_asodi_ad)
         return Response(serializer.data)
     elif request.method == 'PUT':
-        data = request.data
-        serializer = UsuarioAsodiSerializer(usuario_asodi, data=data)
+        serializer = UsuarioAsodiAdSerializer(usuario_asodi_ad, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        usuario_asodi_ad.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET', 'POST'])
+def listado_convenios(request):
+    if request.method == 'GET':
+        convenios = Convenios.objects.all()
+        serializer = ConveniosSerializer(convenios, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        data = request.data
+        serializer = ConveniosSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def vista_convenios(request, id_convenio):
+    convenio = get_object_or_404(Convenios, id_convenio=id_convenio)
+    if request.method == 'GET':
+        serializer = ConveniosSerializer(convenio)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = ConveniosSerializer(convenio, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        convenio.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET', 'POST'])
+def listado_planillas_convenio(request):
+    if request.method == 'GET':
+        planillas = PlanillasConvenio.objects.all()
+        serializer = PlanillasConvenioSerializer(planillas, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        data = request.data
+        serializer = PlanillasConvenioSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def vista_planillas_convenio(request, id_planilla):
+    planilla = get_object_or_404(PlanillasConvenio, id_planilla=id_planilla)
+    if request.method == 'GET':
+        serializer = PlanillasConvenioSerializer(planilla)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = PlanillasConvenioSerializer(planilla, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        planilla.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
