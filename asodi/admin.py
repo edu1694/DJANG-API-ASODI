@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     Usuario, FichaPersonal, RegistroCitasMedicas, RegistroSintoma, 
     RegistroPresion, RegistroPeso, Anuncios, UsuarioAsodiAd, 
-    Convenios, PlanillasConvenio, UsuarioAsodiAdmin
+    Convenios, PlanillasConvenio, UsuarioAsodiAdmin,Solicitudes
 )
 
 # Register your models here.
@@ -16,4 +16,5 @@ admin.site.register(Anuncios)
 admin.site.register(UsuarioAsodiAd)
 admin.site.register(Convenios)          
 admin.site.register(PlanillasConvenio)   
-admin.site.register(UsuarioAsodiAdmin)   
+admin.site.register(UsuarioAsodiAdmin)
+admin.site.register(Solicitudes)  
