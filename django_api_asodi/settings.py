@@ -138,7 +138,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CORS Authorization
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8081",
-    "http://localhost:5173",  # Cambia esto según el puerto que uses
+    "http://localhost:5173",
+    "http://localhost:5174",  # Cambia esto según el puerto que uses
 ]
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
