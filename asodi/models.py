@@ -189,12 +189,13 @@ class PlanillasConvenio(models.Model):
 # Modelo para Anuncios
 class Anuncios(models.Model):
     id_anuncio = models.AutoField(primary_key=True)
-    usuario_asodi_admin = models.ForeignKey(UsuarioAsodiAdmin, on_delete=models.CASCADE)
+    usuario_asodi_admin = models.ForeignKey('UsuarioAsodiAdmin', on_delete=models.CASCADE)
     titulo = models.CharField(max_length=50, blank=False)
     descripcion = models.TextField(blank=False)
     fecha_inicio = models.DateField(blank=False)
     fecha_termino = models.DateField(blank=False)
     estado_an = models.BooleanField(default=True)  # Campo para indicar si el anuncio está activo o inactivo
+    imagen = models.ImageField(upload_to='anuncios/', blank=True, null=True)  # Campo opcional para la imagen
 
     def __str__(self):
         return self.titulo
