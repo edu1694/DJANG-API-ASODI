@@ -238,22 +238,27 @@ def listado_anuncios(request):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT','DELETE'])
+@api_view(['GET', 'PUT', 'DELETE', 'PATCH'])
 def vista_anuncios(request, id_anuncio):
     anuncio = get_object_or_404(Anuncios, id_anuncio=id_anuncio)
     if request.method == 'GET':
         serializer = AnunciosSerializer(anuncio)
         return Response(serializer.data)
     elif request.method == 'PUT':
-        data = request.data
-        serializer = AnunciosSerializer(anuncio, data=data)
+        serializer = AnunciosSerializer(anuncio, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'PATCH':
+        serializer = AnunciosSerializer(anuncio, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
-        anuncio = get_object_or_404(Anuncios, id_anuncio=id_anuncio)
         anuncio.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
