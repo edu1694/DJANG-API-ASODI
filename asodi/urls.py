@@ -2,7 +2,7 @@ from django.urls import path
 
 from django.conf.urls.static import static
 
-from django_api_asodi import settings
+from django.conf import settings
 from . import views
 
 urlpatterns = [
