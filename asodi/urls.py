@@ -57,7 +57,7 @@ urlpatterns = [
     path('v1/solicitudes/', views.listado_solicitudes, name='listado_solicitudes'),
     path('v1/solicitudes/<int:id_soli>/', views.vista_solicitud, name='vista_solicitud'),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
     
