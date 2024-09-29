@@ -238,7 +238,7 @@ def listado_anuncios(request):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT'])
+@api_view(['GET', 'PUT','DELETE'])
 def vista_anuncios(request, id_anuncio):
     anuncio = get_object_or_404(Anuncios, id_anuncio=id_anuncio)
     if request.method == 'GET':
@@ -252,6 +252,10 @@ def vista_anuncios(request, id_anuncio):
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        anuncio = get_object_or_404(Anuncios, id_anuncio=id_anuncio)
+        anuncio.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
 def listado_usuario_asodi_admin(request):
