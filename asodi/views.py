@@ -229,38 +229,38 @@ def listado_anuncios(request):
         anuncios = Anuncios.objects.all()
         serializer = AnunciosSerializer(anuncios, many=True)
         return Response(serializer.data)
+    
     elif request.method == 'POST':
-        data = request.data
-        serializer = AnunciosSerializer(data=data)
+        data = request.data.copy()  # Hacemos una copia de los datos para no modificar el original
+        files = request.FILES.get('imagen')  # Extraemos la imagen de los archivos
+        serializer = AnunciosSerializer(data=data, files=request.FILES)  # Asegúrate de pasar los archivos
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE', 'PATCH'])
 def vista_anuncios(request, id_anuncio):
     anuncio = get_object_or_404(Anuncios, id_anuncio=id_anuncio)
+    
     if request.method == 'GET':
         serializer = AnunciosSerializer(anuncio)
         return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = AnunciosSerializer(anuncio, data=request.data)
+    
+    elif request.method in ['PUT', 'PATCH']:
+        data = request.data.copy()
+        files = request.FILES.get('imagen')
+        serializer = AnunciosSerializer(anuncio, data=data, files=request.FILES, partial=(request.method == 'PATCH'))
+        
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'PATCH':
-        serializer = AnunciosSerializer(anuncio, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     elif request.method == 'DELETE':
         anuncio.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 @api_view(['GET'])
 def listado_usuario_asodi_admin(request):
