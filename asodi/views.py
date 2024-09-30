@@ -231,13 +231,12 @@ def listado_anuncios(request):
         return Response(serializer.data)
     
     elif request.method == 'POST':
-        data = request.data.copy()  # Hacemos una copia de los datos para no modificar el original
-        files = request.FILES.get('imagen')  # Extraemos la imagen de los archivos
-        serializer = AnunciosSerializer(data=data, files=request.FILES)  # Asegúrate de pasar los archivos
+        serializer = AnunciosSerializer(data=request.data, files=request.FILES)  # Pasamos los archivos automáticamente
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET', 'PUT', 'DELETE', 'PATCH'])
 def vista_anuncios(request, id_anuncio):
