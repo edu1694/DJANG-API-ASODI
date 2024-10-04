@@ -149,11 +149,16 @@ class Convenios(models.Model):
 # Modelo para PlanillasConvenio
 from django.db import models
 
+from django.core.exceptions import ValidationError
+from django.db import models
+
 class PlanillasConvenio(models.Model):
     ESTADO_PACIENTE_CHOICES = [
         ('P', 'Pendiente'),
         ('E', 'En proceso'),
+        ('O', 'Operado'),
         ('A', 'Alta'),
+        ('R', 'Rechazado'),
     ]
 
     id_planilla = models.AutoField(primary_key=True)
@@ -179,11 +184,25 @@ class PlanillasConvenio(models.Model):
         blank=False
     )
     
-    convenios = models.ForeignKey(Convenios, on_delete=models.CASCADE)
-    usuario_asodi_ad = models.ForeignKey(UsuarioAsodiAd, on_delete=models.CASCADE)
+    # Campo opcional solo para estado "Rechazado"
+    motivo_rechazo = models.TextField(blank=True, null=True)
+
+    convenios = models.ForeignKey('Convenios', on_delete=models.CASCADE)
+    usuario_asodi_ad = models.ForeignKey('UsuarioAsodiAd', on_delete=models.CASCADE)
+
+    def clean(self):
+        """Validación adicional para motivo de rechazo."""
+        if self.estado_paciente == 'R' and not self.motivo_rechazo:
+            raise ValidationError("Debe proporcionar un motivo de rechazo si el estado es 'Rechazado'.")
+
+    def save(self, *args, **kwargs):
+        """Sobreescritura del método save para realizar validaciones antes de guardar."""
+        self.clean()  # Ejecuta las validaciones antes de guardar
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Planilla del paciente {self.nombre_paciente} {self.apellido_paciente}"
+
 
 
 # Modelo para Anuncios
