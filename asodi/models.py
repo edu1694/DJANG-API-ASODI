@@ -1,6 +1,8 @@
 from django.db import models
 import re
 from django.forms import ValidationError
+from django.utils import timezone
+
 
 # Validador para el formato del RUT
 def validate_rut(value):
@@ -153,6 +155,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 class PlanillasConvenio(models.Model):
+    # Definición de los campos
     ESTADO_PACIENTE_CHOICES = [
         ('P', 'Pendiente'),
         ('E', 'En proceso'),
@@ -166,7 +169,7 @@ class PlanillasConvenio(models.Model):
     rut = models.CharField(max_length=12, validators=[validate_rut], unique=True)
     nombre_paciente = models.CharField(max_length=50, blank=False)
     apellido_paciente = models.CharField(max_length=50, blank=False)
-    fecha_sic = models.DateField(blank=True, null=True)  # Campo opcional
+    fecha_sic = models.DateField(blank=True, null=True)
     reg_primer_llamado = models.DateField(blank=False)
     reg_segundo_llamado = models.DateField(blank=True, null=True)
     reg_tercer_llamado = models.DateField(blank=True, null=True)
@@ -180,13 +183,11 @@ class PlanillasConvenio(models.Model):
     estado_paciente = models.CharField(
         max_length=1,
         choices=ESTADO_PACIENTE_CHOICES,
-        default='P',  # Valor predeterminado, si lo deseas
+        default='P',  # Valor predeterminado
         blank=False
     )
     
-    # Campo opcional solo para estado "Rechazado"
     motivo_rechazo = models.TextField(blank=True, null=True)
-
     convenios = models.ForeignKey('Convenios', on_delete=models.CASCADE)
     usuario_asodi_ad = models.ForeignKey('UsuarioAsodiAd', on_delete=models.CASCADE)
 
@@ -196,9 +197,10 @@ class PlanillasConvenio(models.Model):
             raise ValidationError("Debe proporcionar un motivo de rechazo si el estado es 'Rechazado'.")
 
     def save(self, *args, **kwargs):
-        """Sobreescritura del método save para realizar validaciones antes de guardar."""
-        self.clean()  # Ejecuta las validaciones antes de guardar
-        super().save(*args, **kwargs)
+        """Sobreescritura del método save para asignar la fecha de recepción."""
+        if not self.fecha_recepcion:
+            self.fecha_recepcion = timezone.now()  # Guardar la fecha actual en UTC
+        super().save(*args, **kwargs)  # Llamar al método save original para guardar el registro
 
     def __str__(self):
         return f"Planilla del paciente {self.nombre_paciente} {self.apellido_paciente}"
