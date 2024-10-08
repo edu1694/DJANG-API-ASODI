@@ -95,7 +95,7 @@ class RegistroSintoma(models.Model):
         return f"Síntoma: {self.tipo_sintoma} - {self.descripcion}"
 
 class RegistroPresion(models.Model):
-    id_presion = models.AutoField(primary_key=True, default=1)
+    id_presion = models.AutoField(primary_key=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, to_field='rut')
     presion_diastolica = models.IntegerField(blank=False, validators=[validate_positive])
     presion_sistolica = models.IntegerField(blank=False, validators=[validate_positive])
