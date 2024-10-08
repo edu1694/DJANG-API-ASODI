@@ -200,7 +200,7 @@ class PlanillasConvenio(models.Model):
 class Anuncios(models.Model):
     id_anuncio = models.AutoField(primary_key=True)
     usuario_asodi_admin = models.ForeignKey('UsuarioAsodiAdmin', on_delete=models.CASCADE)
-    titulo = models.CharField(max_length=50, blank=False)
+    titulo = models.CharField(max_length=100, blank=False)
     descripcion = models.TextField(blank=False)
     fecha_inicio = models.DateField(blank=False)
     fecha_termino = models.DateField(blank=False)
