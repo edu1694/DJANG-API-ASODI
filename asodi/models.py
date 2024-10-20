@@ -1,3 +1,4 @@
+from datetime import timezone
 from django.db import models
 import re
 from django.forms import ValidationError
@@ -156,7 +157,7 @@ class PlanillasConvenio(models.Model):
     ]
 
     id_planilla = models.AutoField(primary_key=True)
-    fecha_recepcion = models.DateTimeField(auto_now_add=True)  # Esto guardará la fecha y hora de creación
+    fecha_recepcion = models.DateTimeField(auto_now=False, default=timezone.now)  # Esto guardará la fecha y hora de creación
     rut = models.CharField(max_length=12, validators=[validate_rut], unique=True)
     nombre_paciente = models.CharField(max_length=50, blank=False)
     apellido_paciente = models.CharField(max_length=50, blank=False)
